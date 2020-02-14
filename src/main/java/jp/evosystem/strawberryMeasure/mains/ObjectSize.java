@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.WindowConstants;
 
+import org.bytedeco.javacpp.indexer.FloatRawIndexer;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
@@ -25,6 +26,16 @@ import org.bytedeco.opencv.opencv_core.Size;
 public class ObjectSize {
 
 	/**
+	 * 対象の画像ファイルのパス.
+	 */
+	private static final String TARGET_IMAGE_FILE_PATH = "src/main/resources/Strawberry-Benefits.jpg";
+
+	/**
+	 * 使用する輪郭の面積のしきい値.
+	 */
+	private static final int USE_COUTOUR_AREA_THRESHOLD = 100;
+
+	/**
 	 * main.
 	 *
 	 * @param args
@@ -32,7 +43,7 @@ public class ObjectSize {
 	 */
 	public static void main(String[] args) throws Exception {
 		// 対象の画像ファイル
-		File targetImagefile = new File("src/main/resources/example_01.jpg");
+		File targetImagefile = new File(TARGET_IMAGE_FILE_PATH);
 
 		// 対象の画像ファイルを読み込み
 		Mat targetImageMat = opencv_imgcodecs.imread(targetImagefile.getAbsolutePath());
@@ -57,56 +68,58 @@ public class ObjectSize {
 		opencv_imgproc.findContours(targetImageMatEdge, targetImageContours, targetImageHierarchy,
 				opencv_imgproc.RETR_EXTERNAL,
 				opencv_imgproc.CHAIN_APPROX_SIMPLE);
-		System.out.println("輪郭数:" + targetImageContours.size());
+		System.out.println("検出した輪郭数:" + targetImageContours.size());
 
 		// 使用するものだけ抽出
 		MatVector useTargetImageContours = new MatVector(
 				Arrays.stream(targetImageContours.get())
-						.filter(contour -> 100 < opencv_imgproc.contourArea(contour))
+						.filter(contour -> USE_COUTOUR_AREA_THRESHOLD < opencv_imgproc.contourArea(contour))
 						.collect(Collectors.toList()).toArray(new Mat[0]));
-		System.out.println("輪郭数:" + useTargetImageContours.size());
+		System.out.println("使用する輪郭数:" + useTargetImageContours.size());
 
 		// 全ての輪郭を描画
-		opencv_imgproc.drawContours(targetImageMat, useTargetImageContours, -1, Scalar.WHITE, 3, 0,
-				new Mat(), 1, new Point(0, 0));
+		opencv_imgproc.drawContours(targetImageMat, useTargetImageContours, -1, Scalar.RED, 3, 0, new Mat(), 1,
+				new Point(0, 0));
 
 		// 全ての輪郭に対して実行
 		for (Mat contour : useTargetImageContours.get()) {
+			// 輪郭に対する外接矩形を取得
+			RotatedRect box = opencv_imgproc.minAreaRect(contour);
+
+			// 回転を考慮しない外接矩形を描画
+			opencv_imgproc.rectangle(targetImageMat, box.boundingRect(), Scalar.GREEN);
+
+			// 外接矩形の4点の座標を取得
+			Mat points = new Mat();
+			opencv_imgproc.boxPoints(box, points);
+
+			// 外接矩形の4辺を描画
+			// drawContoursが動かないため4辺をそれぞれ線で描画
+			FloatRawIndexer rawIndexer = points.createIndexer();
+			for (int i = 0; i < points.rows(); i++) {
+				Point point1 = new Point((int) rawIndexer.get(i, 0), (int) rawIndexer.get(i, 1));
+				Point point2 = new Point((int) rawIndexer.get(((i + 1) % 4), 0),
+						(int) rawIndexer.get(((i + 1) % 4), 1));
+				opencv_imgproc.line(targetImageMat, point1, point2, Scalar.BLUE);
+			}
+
 			try {
-				System.out.println("contour:" + contour);
-
-				// ?
-				RotatedRect box = opencv_imgproc.minAreaRect(contour);
-				System.out.println("box:" + box);
-
-				// ?
-				Mat points = new Mat();
-				opencv_imgproc.boxPoints(box, points);
-				System.out.println("points:" + points);
-
-				// ?
+				// MatVectorを作成
 				MatVector pointsMatVector = new MatVector(points);
-				System.out.println("pointsMatVector:" + pointsMatVector);
 
-				// 輪郭を描画(1)
-				opencv_imgproc.rectangle(targetImageMat, box.boundingRect(), Scalar.GREEN);
-
-				// 輪郭を描画(2)
-				opencv_imgproc.drawContours(targetImageMat, pointsMatVector, -1, Scalar.RED, 3, 0,
-						new Mat(), 1, new Point(0, 0));
+				// 輪郭を描画
+				// TODO 動かない
+				opencv_imgproc.drawContours(targetImageMat, pointsMatVector, -1, Scalar.RED);
 			} catch (Exception e) {
 				e.printStackTrace();
 
 				// 輪郭を描画
-				opencv_imgproc.drawContours(targetImageMat, new MatVector(contour), -1, Scalar.BLACK);
+				opencv_imgproc.drawContours(targetImageMat, new MatVector(contour), -1, Scalar.YELLOW);
 			}
 		}
 
 		// 画像を表示
 		display(targetImageMat, "タイトル");
-
-		// リソース開放?
-		useTargetImageContours.close();
 	}
 
 	/**
