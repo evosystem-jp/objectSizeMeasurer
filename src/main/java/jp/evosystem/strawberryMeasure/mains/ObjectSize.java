@@ -19,7 +19,7 @@ import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
 
 /**
- * 画像の大きさを測定.
+ * 画像内の物体の大きさを測定.
  *
  * @author cyrus
  */
@@ -48,6 +48,19 @@ public class ObjectSize {
 		// 対象の画像ファイルを読み込み
 		Mat targetImageMat = opencv_imgcodecs.imread(targetImagefile.getAbsolutePath());
 
+		// 画像処理
+		processTargetImage(targetImageMat);
+
+		// 画像を表示
+		display(targetImageMat, "タイトル");
+	}
+
+	/**
+	 * 画像処理.
+	 *
+	 * @param targetImageMat
+	 */
+	public static void processTargetImage(Mat targetImageMat) {
 		// グレースケール画像を作成
 		Mat targetImageMatGray = new Mat();
 		opencv_imgproc.cvtColor(targetImageMat, targetImageMatGray, opencv_imgproc.COLOR_BGR2GRAY);
@@ -117,9 +130,6 @@ public class ObjectSize {
 				opencv_imgproc.drawContours(targetImageMat, new MatVector(contour), -1, Scalar.YELLOW);
 			}
 		}
-
-		// 画像を表示
-		display(targetImageMat, "タイトル");
 	}
 
 	/**
