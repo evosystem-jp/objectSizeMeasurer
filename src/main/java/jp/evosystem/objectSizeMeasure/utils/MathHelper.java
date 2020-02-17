@@ -19,8 +19,8 @@ public class MathHelper {
 	 * @return
 	 */
 	public static double distance(Point point1, Point point2) {
-		double deltaX = point1.y() - point2.y();
-		double deltaY = point1.x() - point2.x();
+		double deltaX = point1.x() - point2.x();
+		double deltaY = point1.y() - point2.y();
 		double result = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 		return result;
 	}

@@ -5,11 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.swing.WindowConstants;
-
 import org.bytedeco.javacpp.indexer.FloatRawIndexer;
-import org.bytedeco.javacv.CanvasFrame;
-import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.MatVector;
@@ -170,25 +166,5 @@ public abstract class AbstractObjectSize {
 				}
 			}
 		}
-	}
-
-	/**
-	 * 画像を表示.
-	 *
-	 * @param image
-	 * @param caption
-	 */
-	protected static void display(Mat image, String caption) {
-		// フレームを作成
-		final CanvasFrame canvas = new CanvasFrame(caption, 1.0);
-
-		// ウィンドウを閉じたときに終了するように設定
-		canvas.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-		// コンバーターを作成
-		OpenCVFrameConverter<?> converter = new OpenCVFrameConverter.ToMat();
-
-		// フレームに画像を表示
-		canvas.showImage(converter.convert(image));
 	}
 }
