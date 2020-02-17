@@ -3,9 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>jp.evosystem</groupId>
-	<artifactId>strawberryMeasure</artifactId>
+	<artifactId>objectSizeMeasure</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,13 +13,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 	</properties>
 
-
 	<dependencies>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.9</version>
-		</dependency>
 		<dependency>
 			<groupId>org.bytedeco</groupId>
 			<artifactId>javacv-platform</artifactId>

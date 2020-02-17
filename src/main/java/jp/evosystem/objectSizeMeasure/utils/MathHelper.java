@@ -1,11 +1,13 @@
-package jp.evosystem.strawberryMeasure.utils;
+package jp.evosystem.objectSizeMeasure.utils;
+
+import java.util.List;
 
 import org.bytedeco.opencv.opencv_core.Point;
 
 /**
  * 計算ヘルパー.
  *
- * @author cyrus
+ * @author evosystem
  */
 public class MathHelper {
 
@@ -21,5 +23,17 @@ public class MathHelper {
 		double deltaY = point1.x() - point2.x();
 		double result = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 		return result;
+	}
+
+	/**
+	 * 4点の座標を並び替え.
+	 *
+	 * @param pointList
+	 * @return
+	 */
+	public static List<Point> orderPoints(List<Point> pointList) {
+		// TODO perspective.order_points
+
+		return pointList;
 	}
 }

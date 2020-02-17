@@ -1,4 +1,4 @@
-package jp.evosystem.strawberryMeasure.mains;
+package jp.evosystem.objectSizeMeasure.mains;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,12 +18,12 @@ import org.bytedeco.opencv.opencv_core.RotatedRect;
 import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
 
-import jp.evosystem.strawberryMeasure.utils.MathHelper;
+import jp.evosystem.objectSizeMeasure.utils.MathHelper;
 
 /**
  * 画像内の物体の大きさを測定.
  *
- * @author cyrus
+ * @author evosystem
  */
 public abstract class AbstractObjectSize {
 
@@ -74,8 +74,8 @@ public abstract class AbstractObjectSize {
 		// エッジ抽出
 		Mat targetImageMatEdge = new Mat();
 		opencv_imgproc.Canny(targetImageMatBlur, targetImageMatEdge, 50, 100);
-		opencv_imgproc.dilate(targetImageMatEdge, targetImageMatEdge, new Mat(), null, 1, 0, null);
-		opencv_imgproc.erode(targetImageMatEdge, targetImageMatEdge, new Mat(), null, 1, 0, null);
+		opencv_imgproc.dilate(targetImageMatEdge, targetImageMatEdge, new Mat());
+		opencv_imgproc.erode(targetImageMatEdge, targetImageMatEdge, new Mat());
 
 		// 輪郭を検出
 		MatVector targetImageContours = new MatVector();
@@ -126,6 +126,9 @@ public abstract class AbstractObjectSize {
 				opencv_imgproc.line(targetImageMat, point1, point2, Scalar.BLUE);
 				pointList.add(point1);
 			}
+
+			// 4点の座標を並び替え
+			pointList = MathHelper.orderPoints(pointList);
 
 			// 外接矩形の4点の座標をそれぞれ変数に代入
 			Point tl = pointList.get(0);
