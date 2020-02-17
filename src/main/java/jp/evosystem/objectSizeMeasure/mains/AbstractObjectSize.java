@@ -1,4 +1,4 @@
-package jp.evosystem.strawberryMeasure.mains;
+package jp.evosystem.objectSizeMeasure.mains;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,12 +18,12 @@ import org.bytedeco.opencv.opencv_core.RotatedRect;
 import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
 
-import jp.evosystem.strawberryMeasure.utils.MathHelper;
+import jp.evosystem.objectSizeMeasure.utils.MathHelper;
 
 /**
  * 画像内の物体の大きさを測定.
  *
- * @author cyrus
+ * @author evosystem
  */
 public abstract class AbstractObjectSize {
 
@@ -74,8 +74,8 @@ public abstract class AbstractObjectSize {
 		// エッジ抽出
 		Mat targetImageMatEdge = new Mat();
 		opencv_imgproc.Canny(targetImageMatBlur, targetImageMatEdge, 50, 100);
-		opencv_imgproc.dilate(targetImageMatEdge, targetImageMatEdge, new Mat(), null, 1, 0, null);
-		opencv_imgproc.erode(targetImageMatEdge, targetImageMatEdge, new Mat(), null, 1, 0, null);
+		opencv_imgproc.dilate(targetImageMatEdge, targetImageMatEdge, new Mat());
+		opencv_imgproc.erode(targetImageMatEdge, targetImageMatEdge, new Mat());
 
 		// 輪郭を検出
 		MatVector targetImageContours = new MatVector();
@@ -127,6 +127,9 @@ public abstract class AbstractObjectSize {
 				pointList.add(point1);
 			}
 
+			// 4点の座標を並び替え
+			pointList = MathHelper.orderPoints(pointList);
+
 			// 外接矩形の4点の座標をそれぞれ変数に代入
 			Point tl = pointList.get(0);
 			Point tr = pointList.get(1);
@@ -176,16 +179,16 @@ public abstract class AbstractObjectSize {
 	 * @param caption
 	 */
 	protected static void display(Mat image, String caption) {
-		// Create image window named "My Image".
+		// フレームを作成
 		final CanvasFrame canvas = new CanvasFrame(caption, 1.0);
 
-		// Request closing of the application when the image window is closed.
+		// ウィンドウを閉じたときに終了するように設定
 		canvas.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		// Convert from OpenCV Mat to Java Buffered image for display
+		// コンバーターを作成
 		OpenCVFrameConverter<?> converter = new OpenCVFrameConverter.ToMat();
 
-		// Show image on window.
+		// フレームに画像を表示
 		canvas.showImage(converter.convert(image));
 	}
 }

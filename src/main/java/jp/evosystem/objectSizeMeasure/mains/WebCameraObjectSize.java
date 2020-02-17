@@ -1,4 +1,4 @@
-package jp.evosystem.strawberryMeasure.mains;
+package jp.evosystem.objectSizeMeasure.mains;
 
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
@@ -10,7 +10,7 @@ import org.bytedeco.opencv.opencv_core.Mat;
 /**
  * Webカメラ画像から画像内の物体の大きさを測定.
  *
- * @author cyrus
+ * @author evosystem
  */
 public class WebCameraObjectSize extends AbstractObjectSize {
 

@@ -1,4 +1,4 @@
-package jp.evosystem.strawberryMeasure.mains;
+package jp.evosystem.objectSizeMeasure.mains;
 
 import java.io.File;
 
@@ -8,14 +8,14 @@ import org.bytedeco.opencv.opencv_core.Mat;
 /**
  * 画像内の物体の大きさを測定.
  *
- * @author cyrus
+ * @author evosystem
  */
 public class ObjectSize extends AbstractObjectSize {
 
 	/**
 	 * 対象の画像ファイルのパス.
 	 */
-	private static final String TARGET_IMAGE_FILE_PATH = "src/main/resources/example_01.jpg";
+	private static final String TARGET_IMAGE_FILE_PATH = "images/example_02.jpg";
 
 	/**
 	 * main.
