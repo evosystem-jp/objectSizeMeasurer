@@ -3,6 +3,7 @@ package jp.evosystem.strawberryMeasure.mains;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.FrameGrabber.Exception;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.opencv_core.Mat;
 
@@ -11,7 +12,7 @@ import org.bytedeco.opencv.opencv_core.Mat;
  *
  * @author cyrus
  */
-public class WebCameraObjectSize extends ObjectSize {
+public class WebCameraObjectSize extends AbstractObjectSize {
 
 	/**
 	 * main.
@@ -21,20 +22,20 @@ public class WebCameraObjectSize extends ObjectSize {
 	 */
 	public static void main(String[] args) throws Exception {
 		// Webカメラから映像取得
-		FrameGrabber grabber = FrameGrabber.createDefault(0);
-		grabber.start();
+		FrameGrabber frameGrabber = FrameGrabber.createDefault(0);
+		frameGrabber.start();
 
 		// コンバーターを作成
 		OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
 
 		// 画面を作成
-		CanvasFrame canvasFrame = new CanvasFrame("タイトル", CanvasFrame.getDefaultGamma() / grabber.getGamma());
+		CanvasFrame canvasFrame = new CanvasFrame("タイトル", CanvasFrame.getDefaultGamma() / frameGrabber.getGamma());
 
 		// 取得した映像データ
 		Mat grabbedImage;
 
 		// 画面が表示中の間ループ
-		while (canvasFrame.isVisible() && (grabbedImage = converter.convert(grabber.grab())) != null) {
+		while (canvasFrame.isVisible() && (grabbedImage = converter.convert(frameGrabber.grab())) != null) {
 			// 画像処理
 			processTargetImage(grabbedImage);
 
@@ -49,6 +50,6 @@ public class WebCameraObjectSize extends ObjectSize {
 		canvasFrame.dispose();
 
 		// 映像取得を停止
-		grabber.stop();
+		frameGrabber.stop();
 	}
 }
