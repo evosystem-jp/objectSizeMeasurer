@@ -31,7 +31,7 @@ public abstract class AbstractObjectSize {
 	/**
 	 * 使用するピクセル/cm.
 	 */
-	private static final int USE_PIXEL_PER_CENTIMETER = 100;
+	private static final int USE_PIXEL_PER_CENTIMETER = 40;
 
 	/**
 	 * 全ての輪郭を描画するかどうか.
@@ -65,7 +65,7 @@ public abstract class AbstractObjectSize {
 
 		// ブラー画像を作成
 		Mat targetImageMatBlur = new Mat();
-		opencv_imgproc.GaussianBlur(targetImageMatGray, targetImageMatBlur, new Size(9, 9), 0);
+		opencv_imgproc.GaussianBlur(targetImageMatGray, targetImageMatBlur, new Size(5, 5), 0);
 
 		// エッジ抽出
 		Mat targetImageMatEdge = new Mat();
@@ -126,28 +126,43 @@ public abstract class AbstractObjectSize {
 			// 4点の座標を並び替え
 			pointList = MathHelper.orderPoints(pointList);
 
+			// 4点の座標に円を描画
+			for (Point point : pointList) {
+				opencv_imgproc.circle(targetImageMat, point, 5, Scalar.RED, -1, opencv_imgproc.FILLED, 0);
+			}
+
 			// 外接矩形の4点の座標をそれぞれ変数に代入
 			Point tl = pointList.get(0);
 			Point tr = pointList.get(1);
 			Point br = pointList.get(2);
 			Point bl = pointList.get(3);
 
-			// 文字の描画点を作成
-			Point midPointHorizontal = new Point(tl.x() + (Math.abs(tr.x() - tl.x()) / 2),
-					tl.y() + (Math.abs(tr.y() - tl.y()) / 2));
-			Point midPointVerticle = new Point(tr.x() + (Math.abs(tr.x() - br.x()) / 2),
-					tr.y() + (Math.abs(tr.y() - br.y()) / 2));
+			// 中間点を計算
+			Point tltr = MathHelper.midPoint(tl, tr);
+			Point blbr = MathHelper.midPoint(bl, br);
+			Point tlbl = MathHelper.midPoint(tl, bl);
+			Point trbr = MathHelper.midPoint(tr, br);
 
-			// 辺の長さを計算
-			double width = MathHelper.distance(tl, tr) / USE_PIXEL_PER_CENTIMETER;
-			double height = MathHelper.distance(tr, br) / USE_PIXEL_PER_CENTIMETER;
+			// 中間点に円を描画
+			opencv_imgproc.circle(targetImageMat, tltr, 3, Scalar.BLUE, -1, opencv_imgproc.FILLED, 0);
+			opencv_imgproc.circle(targetImageMat, blbr, 3, Scalar.BLUE, -1, opencv_imgproc.FILLED, 0);
+			opencv_imgproc.circle(targetImageMat, tlbl, 3, Scalar.BLUE, -1, opencv_imgproc.FILLED, 0);
+			opencv_imgproc.circle(targetImageMat, trbr, 3, Scalar.BLUE, -1, opencv_imgproc.FILLED, 0);
+
+			// 中間点同士を結ぶ直線を描画
+			opencv_imgproc.line(targetImageMat, tltr, blbr, Scalar.BLUE);
+			opencv_imgproc.line(targetImageMat, tlbl, trbr, Scalar.BLUE);
+
+			// 中間点間の長さを計算
+			double width = MathHelper.distance(tltr, blbr) / USE_PIXEL_PER_CENTIMETER;
+			double height = MathHelper.distance(tlbl, trbr) / USE_PIXEL_PER_CENTIMETER;
 
 			// 文字を描画
 			opencv_imgproc.putText(targetImageMat, String.format("%.2fcm", width),
-					new Point((midPointHorizontal.x() - 15), (midPointHorizontal.y() - 10)),
+					new Point((tltr.x() - 15), (tltr.y() - 10)),
 					opencv_imgproc.FONT_HERSHEY_SIMPLEX, 0.5, Scalar.BLACK);
 			opencv_imgproc.putText(targetImageMat, String.format("%.2fcm", height),
-					new Point((midPointVerticle.x() + 10), (midPointVerticle.y())),
+					new Point((trbr.x() + 10), trbr.y()),
 					opencv_imgproc.FONT_HERSHEY_SIMPLEX, 0.5, Scalar.BLACK);
 
 			try {

@@ -45,5 +45,5 @@ java jp.evosystem.objectSizeMeasure.WebCameraObjectSize
 
 ## Acknowledgments
 
-* https://www.pyimagesearch.com/
+* https://www.pyimagesearch.com/2016/03/28/measuring-size-of-objects-in-an-image-with-opencv/
 * https://github.com/snsharma1311/object-size
