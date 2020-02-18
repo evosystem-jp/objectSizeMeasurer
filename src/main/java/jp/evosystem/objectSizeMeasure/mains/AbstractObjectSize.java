@@ -26,7 +26,7 @@ public abstract class AbstractObjectSize {
 	/**
 	 * 使用する輪郭の面積のしきい値.
 	 */
-	private static final int USE_CONTOUR_AREA_THRESHOLD = 100;
+	private static final int USE_CONTOUR_AREA_THRESHOLD = 200;
 
 	/**
 	 * 使用するピクセル/cm.
@@ -65,7 +65,7 @@ public abstract class AbstractObjectSize {
 
 		// ブラー画像を作成
 		Mat targetImageMatBlur = new Mat();
-		opencv_imgproc.GaussianBlur(targetImageMatGray, targetImageMatBlur, new Size(5, 5), 0);
+		opencv_imgproc.GaussianBlur(targetImageMatGray, targetImageMatBlur, new Size(7, 7), 0);
 
 		// エッジ抽出
 		Mat targetImageMatEdge = new Mat();
@@ -124,7 +124,7 @@ public abstract class AbstractObjectSize {
 			}
 
 			// 4点の座標を並び替え
-			pointList = MathHelper.orderPoints(pointList);
+			pointList = MathHelper.orderPoints2(pointList);
 
 			// 4点の座標に円を描画
 			for (Point point : pointList) {

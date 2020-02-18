@@ -1,6 +1,7 @@
 package jp.evosystem.objectSizeMeasure.utils;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.bytedeco.opencv.opencv_core.Point;
@@ -39,11 +40,17 @@ public class MathHelper {
 
 	/**
 	 * 4点の座標を並び替え.<br>
-	 * tl,tr,br,blの順.
+	 * tl,tr,br,blの順.<br>
 	 *
+	 * @see MathHelper#orderPoints2
+	 * @see <a href=
+	 *      "https://www.pyimagesearch.com/2016/03/21/ordering-coordinates-clockwise-with-python-and-opencv/">Ordering
+	 *      coordinates clockwise with Python and OpenCV</a>
 	 * @param pointList
 	 * @return
+	 * @deprecated {@link MathHelper#orderPoints2}を使用してください.
 	 */
+	@Deprecated
 	public static List<Point> orderPoints(List<Point> pointList) {
 		Point tl = null;
 		Point tr = null;
@@ -78,6 +85,25 @@ public class MathHelper {
 			}
 		}
 
+		return Arrays.asList(tl, tr, br, bl);
+	}
+
+	/**
+	 * 4点の座標を並び替え.<br>
+	 * tl,tr,br,blの順.
+	 *
+	 * @see MathHelper#orderPoints
+	 * @see <a href=
+	 *      "https://www.pyimagesearch.com/2016/03/21/ordering-coordinates-clockwise-with-python-and-opencv/">Ordering
+	 *      coordinates clockwise with Python and OpenCV</a>
+	 * @param pointList
+	 * @return
+	 */
+	public static List<Point> orderPoints2(List<Point> pointList) {
+		Point tl = pointList.stream().min(Comparator.comparingInt(point -> point.x() + point.y())).get();
+		Point tr = pointList.stream().min(Comparator.comparingInt(point -> point.y() - point.x())).get();
+		Point br = pointList.stream().max(Comparator.comparingInt(point -> point.x() + point.y())).get();
+		Point bl = pointList.stream().max(Comparator.comparingInt(point -> point.y() - point.x())).get();
 		return Arrays.asList(tl, tr, br, bl);
 	}
 }
