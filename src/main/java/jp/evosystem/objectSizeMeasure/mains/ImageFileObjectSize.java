@@ -14,12 +14,12 @@ import org.bytedeco.opencv.opencv_core.Mat;
  *
  * @author evosystem
  */
-public class ObjectSize extends AbstractObjectSize {
+public class ImageFileObjectSize extends AbstractObjectSize {
 
 	/**
 	 * 対象の画像ファイルのパス.
 	 */
-	private static final String TARGET_IMAGE_FILE_PATH = "images/example_02.jpg";
+	private static final String TARGET_IMAGE_FILE_PATH = "images/example_01.jpg";
 
 	/**
 	 * main.

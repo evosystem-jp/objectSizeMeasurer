@@ -8,16 +8,31 @@ The project provides a script to read an image and draw objects contours.
 
 ## Getting Started
 
+### Prerequisites
+1. Java 8 (maybe or higher)
+2. Maven
+
+### Installing
+1. Clone repository
+ - `git clone https://github.com/evosystem-jp/objectSizeMeasure.git`
+2. Install dependencies
+ - `mvn install`
+
 ### Run
 
 #### For image file
 ```sh
-java jp.evosystem.objectSizeMeasure.ObjectSize
+mvn exec:java -Dexec.mainClass="jp.evosystem.objectSizeMeasure.mains.ImageFileObjectSize"
+```
+
+#### For video file
+```sh
+mvn exec:java -Dexec.mainClass="jp.evosystem.objectSizeMeasure.mains.VideoFileObjectSize"
 ```
 
 #### For web camera image
 ```sh
-java jp.evosystem.objectSizeMeasure.WebCameraObjectSize
+mvn exec:java -Dexec.mainClass="jp.evosystem.objectSizeMeasure.mains.WebCameraObjectSize"
 ```
 
 ## Algorithm
