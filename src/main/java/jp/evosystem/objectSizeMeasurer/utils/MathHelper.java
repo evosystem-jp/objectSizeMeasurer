@@ -1,4 +1,4 @@
-package jp.evosystem.objectSizeMeasure.utils;
+package jp.evosystem.objectSizeMeasurer.utils;
 
 import java.util.Arrays;
 import java.util.Comparator;

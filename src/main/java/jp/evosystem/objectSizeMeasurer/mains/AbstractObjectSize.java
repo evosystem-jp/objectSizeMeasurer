@@ -1,4 +1,4 @@
-package jp.evosystem.objectSizeMeasure.mains;
+package jp.evosystem.objectSizeMeasurer.mains;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import org.bytedeco.opencv.opencv_core.RotatedRect;
 import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
 
-import jp.evosystem.objectSizeMeasure.utils.MathHelper;
+import jp.evosystem.objectSizeMeasurer.utils.MathHelper;
 
 /**
  * 画像内の物体の大きさを測定.

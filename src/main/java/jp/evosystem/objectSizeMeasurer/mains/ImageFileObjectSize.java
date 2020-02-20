@@ -1,4 +1,4 @@
-package jp.evosystem.objectSizeMeasure.mains;
+package jp.evosystem.objectSizeMeasurer.mains;
 
 import java.io.File;
 

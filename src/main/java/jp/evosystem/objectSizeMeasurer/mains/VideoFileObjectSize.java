@@ -1,4 +1,4 @@
-package jp.evosystem.objectSizeMeasure.mains;
+package jp.evosystem.objectSizeMeasurer.mains;
 
 import java.io.File;
 
@@ -20,7 +20,7 @@ public class VideoFileObjectSize extends AbstractObjectSize {
 	/**
 	 * 対象の動画ファイルのパス.
 	 */
-	private static final String TARGET_VIDEO_FILE_PATH = "videos/example.mp4";
+	private static final String TARGET_VIDEO_FILE_PATH = "videos/Tong ke ke.mp4";
 
 	/**
 	 * main.
