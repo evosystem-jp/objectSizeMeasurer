@@ -14,6 +14,7 @@ import org.bytedeco.opencv.opencv_core.RotatedRect;
 import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
 
+import jp.evosystem.objectSizeMeasurer.constants.Configurations;
 import jp.evosystem.objectSizeMeasurer.utils.MathHelper;
 
 /**
@@ -24,32 +25,12 @@ import jp.evosystem.objectSizeMeasurer.utils.MathHelper;
 public abstract class AbstractObjectSize {
 
 	/**
-	 * 使用する輪郭の面積のしきい値.
-	 */
-	private static final int USE_CONTOUR_AREA_THRESHOLD = 200;
-
-	/**
-	 * 使用するピクセル/cm.
-	 */
-	private static final int USE_PIXEL_PER_CENTIMETER = 40;
-
-	/**
-	 * 全ての輪郭を描画するかどうか.
-	 */
-	private static final boolean DRAW_ALL_CONTOURS = false;
-
-	/**
-	 * 回転を考慮しない外接矩形を描画するかどうか.
-	 */
-	private static final boolean DRAW_RECTANGLE = false;
-
-	/**
 	 * 画像処理.
 	 *
 	 * @param targetImageMat
 	 */
 	protected static void processTargetImage(Mat targetImageMat) {
-		processTargetImage(targetImageMat, USE_CONTOUR_AREA_THRESHOLD);
+		processTargetImage(targetImageMat, Configurations.USE_CONTOUR_AREA_THRESHOLD);
 	}
 
 	/**
@@ -89,7 +70,7 @@ public abstract class AbstractObjectSize {
 		System.out.println("使用する輪郭数:" + useTargetImageContours.size());
 
 		// 全ての輪郭を描画
-		if (DRAW_ALL_CONTOURS) {
+		if (Configurations.DRAW_ALL_CONTOURS) {
 			opencv_imgproc.drawContours(targetImageMat, useTargetImageContours, -1, Scalar.RED, 3, 0, new Mat(), 1,
 					new Point(0, 0));
 		}
@@ -100,7 +81,7 @@ public abstract class AbstractObjectSize {
 			RotatedRect box = opencv_imgproc.minAreaRect(contour);
 
 			// 回転を考慮しない外接矩形を描画
-			if (DRAW_RECTANGLE) {
+			if (Configurations.DRAW_RECTANGLE) {
 				opencv_imgproc.rectangle(targetImageMat, box.boundingRect(), Scalar.GREEN);
 			}
 
@@ -154,8 +135,8 @@ public abstract class AbstractObjectSize {
 			opencv_imgproc.line(targetImageMat, tlbl, trbr, Scalar.BLUE);
 
 			// 中間点間の長さを計算
-			double width = MathHelper.distance(tltr, blbr) / USE_PIXEL_PER_CENTIMETER;
-			double height = MathHelper.distance(tlbl, trbr) / USE_PIXEL_PER_CENTIMETER;
+			double width = MathHelper.distance(tltr, blbr) / Configurations.USE_PIXEL_PER_CENTIMETER;
+			double height = MathHelper.distance(tlbl, trbr) / Configurations.USE_PIXEL_PER_CENTIMETER;
 
 			// 文字を描画
 			opencv_imgproc.putText(targetImageMat, String.format("%.2fcm", width),
@@ -176,7 +157,7 @@ public abstract class AbstractObjectSize {
 				e.printStackTrace();
 
 				// 輪郭を描画
-				if (DRAW_ALL_CONTOURS) {
+				if (Configurations.DRAW_ALL_CONTOURS) {
 					opencv_imgproc.drawContours(targetImageMat, new MatVector(contour), -1, Scalar.YELLOW);
 				}
 			}

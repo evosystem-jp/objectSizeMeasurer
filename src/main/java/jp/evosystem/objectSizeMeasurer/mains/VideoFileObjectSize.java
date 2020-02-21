@@ -10,17 +10,14 @@ import org.bytedeco.javacv.FrameGrabber.Exception;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.opencv_core.Mat;
 
+import jp.evosystem.objectSizeMeasurer.constants.Configurations;
+
 /**
  * 動画内の物体の大きさを測定.
  *
  * @author evosystem
  */
 public class VideoFileObjectSize extends AbstractObjectSize {
-
-	/**
-	 * 対象の動画ファイルのパス.
-	 */
-	private static final String TARGET_VIDEO_FILE_PATH = "videos/Tong ke ke.mp4";
 
 	/**
 	 * main.
@@ -30,7 +27,7 @@ public class VideoFileObjectSize extends AbstractObjectSize {
 	 */
 	public static void main(String[] args) throws Exception {
 		// 対象の動画ファイル
-		File targetVideofile = new File(TARGET_VIDEO_FILE_PATH);
+		File targetVideofile = new File(Configurations.TARGET_VIDEO_FILE_PATH);
 
 		// Webカメラから映像取得
 		try (FrameGrabber frameGrabber = new FFmpegFrameGrabber(targetVideofile)) {

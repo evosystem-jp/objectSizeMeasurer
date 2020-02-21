@@ -7,6 +7,8 @@ import org.bytedeco.javacv.FrameGrabber.Exception;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.opencv_core.Mat;
 
+import jp.evosystem.objectSizeMeasurer.constants.Configurations;
+
 /**
  * Webカメラ画像から画像内の物体の大きさを測定.
  *
@@ -22,7 +24,7 @@ public class WebCameraObjectSize extends AbstractObjectSize {
 	 */
 	public static void main(String[] args) throws Exception {
 		// Webカメラから映像取得
-		try (FrameGrabber frameGrabber = FrameGrabber.createDefault(0)) {
+		try (FrameGrabber frameGrabber = FrameGrabber.createDefault(Configurations.TARGET_DEVICE_NUMBER)) {
 			frameGrabber.start();
 
 			// コンバーターを作成
