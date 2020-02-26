@@ -36,16 +36,19 @@ public abstract class AbstractObjectSize {
 	 * @param targetImageMat
 	 */
 	protected static void processTargetImage(Mat targetImageMat) {
-		processTargetImage(targetImageMat, Configurations.USE_CONTOUR_AREA_THRESHOLD);
+		processTargetImage(targetImageMat, Configurations.USE_CONTOUR_AREA_MIN_THRESHOLD,
+				Configurations.USE_CONTOUR_AREA_MAX_THRESHOLD);
 	}
 
 	/**
 	 * 画像処理.
 	 *
 	 * @param targetImageMat
-	 * @param useContourAreaThreshold
+	 * @param useContourAreaMinThreshold
+	 * @param useContourAreaMaxThreshold
 	 */
-	protected static void processTargetImage(Mat targetImageMat, int useContourAreaThreshold) {
+	protected static void processTargetImage(Mat targetImageMat, int useContourAreaMinThreshold,
+			int useContourAreaMaxThreshold) {
 		// グレースケール画像を作成
 		Mat targetImageMatGray = new Mat();
 		opencv_imgproc.cvtColor(targetImageMat, targetImageMatGray, opencv_imgproc.COLOR_BGR2GRAY);
@@ -73,12 +76,17 @@ public abstract class AbstractObjectSize {
 		// 使用するものだけ抽出
 		MatVector useTargetImageContours = new MatVector(
 				Arrays.stream(targetImageContours.get())
-						.filter(contour -> useContourAreaThreshold < opencv_imgproc.contourArea(contour))
+						.filter(contour -> {
+							double contourArea = opencv_imgproc.contourArea(contour);
+							return useContourAreaMinThreshold < contourArea && contourArea < useContourAreaMaxThreshold;
+						})
 						.collect(Collectors.toList()).toArray(new Mat[0]));
 		System.out.println("使用する輪郭数:" + useTargetImageContours.size());
 
 		// debug
-		 opencv_core.copyTo(targetImageMatEdge, targetImageMat, new Mat());
+		if (Configurations.ENABLE_DEBUG_MODE) {
+			opencv_core.copyTo(targetImageMatEdge, targetImageMat, new Mat());
+		}
 
 		// 全ての輪郭を描画
 		if (Configurations.DRAW_ALL_CONTOURS) {

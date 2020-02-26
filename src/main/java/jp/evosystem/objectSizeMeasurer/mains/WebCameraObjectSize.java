@@ -48,18 +48,22 @@ public class WebCameraObjectSize extends AbstractObjectSize {
 
 				// 画面が表示中の間ループ
 				while (canvasFrame.isVisible() && (grabbedImage = converter.convert(frameGrabber.grab())) != null) {
-					// 画像処理
-					processTargetImage(grabbedImage);
+					try {
+						// 画像処理
+						processTargetImage(grabbedImage);
 
-					// フレームを作成
-					Frame frame = converter.convert(grabbedImage);
+						// フレームを作成
+						Frame frame = converter.convert(grabbedImage);
 
-					// フレームを表示
-					canvasFrame.showImage(frame);
+						// フレームを表示
+						canvasFrame.showImage(frame);
 
-					// フレームを録画
-					if (Configurations.ENABLE_RECORDING) {
-						recorder.record(frame);
+						// フレームを録画
+						if (Configurations.ENABLE_RECORDING) {
+							recorder.record(frame);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 

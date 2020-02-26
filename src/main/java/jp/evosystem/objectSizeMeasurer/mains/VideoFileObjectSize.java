@@ -57,31 +57,31 @@ public class VideoFileObjectSize extends AbstractObjectSize {
 
 				// 画面が表示中の間ループ
 				while (canvasFrame.isVisible() && (frameGrabber.getFrameNumber() < frameGrabber.getLengthInFrames())) {
-					// 動画のフレームを取得
-					grabbedImage = converter.convert(frameGrabber.grab());
+					try {
+						// 動画のフレームを取得
+						grabbedImage = converter.convert(frameGrabber.grab());
 
-					// 動画のフレームが存在する場合のみ処理を実行
-					if (grabbedImage != null) {
-						// 画像処理
-						processTargetImage(grabbedImage);
+						// 動画のフレームが存在する場合のみ処理を実行
+						if (grabbedImage != null) {
+							// 画像処理
+							processTargetImage(grabbedImage);
 
-						// フレームを作成
-						Frame frame = converter.convert(grabbedImage);
+							// フレームを作成
+							Frame frame = converter.convert(grabbedImage);
 
-						// フレームを表示
-						canvasFrame.showImage(frame);
+							// フレームを表示
+							canvasFrame.showImage(frame);
 
-						// フレームを録画
-						if (Configurations.ENABLE_RECORDING) {
-							recorder.record(frame);
-						}
+							// フレームを録画
+							if (Configurations.ENABLE_RECORDING) {
+								recorder.record(frame);
+							}
 
-						try {
 							// フレームレートに応じて適切にウエイトを行う
 							Thread.sleep((int) (1000 / frameRate));
-						} catch (InterruptedException e) {
-							// NOP
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 

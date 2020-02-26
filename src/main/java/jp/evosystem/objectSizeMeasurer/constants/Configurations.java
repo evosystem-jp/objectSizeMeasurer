@@ -8,6 +8,11 @@ package jp.evosystem.objectSizeMeasurer.constants;
 public interface Configurations {
 
 	/**
+	 * デバッグモードを有効化するかどうか.
+	 */
+	boolean ENABLE_DEBUG_MODE = false;
+
+	/**
 	 * 使用するブラーのサイズ(奇数).
 	 */
 	int USE_GAUSSIAN_BLUR_SIZE = 7;
@@ -23,9 +28,14 @@ public interface Configurations {
 	int USE_CANNY_THRESHOLD_2 = 100;
 
 	/**
-	 * 使用する輪郭の面積のしきい値.
+	 * 使用する輪郭の面積の最小値.
 	 */
-	int USE_CONTOUR_AREA_THRESHOLD = 200;
+	int USE_CONTOUR_AREA_MIN_THRESHOLD = 100;
+
+	/**
+	 * 使用する輪郭の面積の最大値.
+	 */
+	int USE_CONTOUR_AREA_MAX_THRESHOLD = 1000;
 
 	/**
 	 * 使用するピクセル/cm.
