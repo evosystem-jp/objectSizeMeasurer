@@ -37,7 +37,7 @@ public class VideoFileObjectSize extends AbstractObjectSize {
 			double frameRate = frameGrabber.getFrameRate();
 
 			// レコーダーを作成
-			try (FrameRecorder recorder = FrameRecorder.createDefault("target/VideoFileObjectSize.avi",
+			try (FrameRecorder recorder = FrameRecorder.createDefault("target/VideoFileObjectSize.mp4",
 					frameGrabber.getImageWidth(),
 					frameGrabber.getImageHeight())) {
 				// 録画を開始

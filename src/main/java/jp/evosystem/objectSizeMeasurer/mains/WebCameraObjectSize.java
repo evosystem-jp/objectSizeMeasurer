@@ -28,7 +28,7 @@ public class WebCameraObjectSize extends AbstractObjectSize {
 			frameGrabber.start();
 
 			// レコーダーを作成
-			try (FrameRecorder recorder = FrameRecorder.createDefault("target/WebCameraObjectSize.avi",
+			try (FrameRecorder recorder = FrameRecorder.createDefault("target/WebCameraObjectSize.mp4",
 					frameGrabber.getImageWidth(),
 					frameGrabber.getImageHeight())) {
 				// 録画を開始
