@@ -8,6 +8,21 @@ package jp.evosystem.objectSizeMeasurer.constants;
 public interface Configurations {
 
 	/**
+	 * 使用するブラーのサイズ(奇数).
+	 */
+	int USE_GAUSSIAN_BLUR_SIZE = 7;
+
+	/**
+	 * 使用するCanny処理のしきい値1.
+	 */
+	int USE_CANNY_THRESHOLD_1 = 50;
+
+	/**
+	 * 使用するCanny処理のしきい値2.
+	 */
+	int USE_CANNY_THRESHOLD_2 = 100;
+
+	/**
 	 * 使用する輪郭の面積のしきい値.
 	 */
 	int USE_CONTOUR_AREA_THRESHOLD = 200;
@@ -26,6 +41,11 @@ public interface Configurations {
 	 * 回転を考慮しない外接矩形を描画するかどうか.
 	 */
 	boolean DRAW_RECTANGLE = false;
+
+	/**
+	 * 処理結果をファイルに出力するかどうか.
+	 */
+	boolean ENABLE_RECORDING = true;
 
 	/**
 	 * 対象の画像ファイルのパス.

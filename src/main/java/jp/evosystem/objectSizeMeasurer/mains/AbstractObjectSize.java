@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bytedeco.javacpp.indexer.FloatRawIndexer;
+import org.bytedeco.opencv.global.opencv_core;
 import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.MatVector;
@@ -23,6 +24,11 @@ import jp.evosystem.objectSizeMeasurer.utils.MathHelper;
  * @author evosystem
  */
 public abstract class AbstractObjectSize {
+
+	/**
+	 * 古い描画処理を使用するかどうか.
+	 */
+	private static boolean USE_ALTERNATIVE_DRAWING = false;
 
 	/**
 	 * 画像処理.
@@ -46,11 +52,13 @@ public abstract class AbstractObjectSize {
 
 		// ブラー画像を作成
 		Mat targetImageMatBlur = new Mat();
-		opencv_imgproc.GaussianBlur(targetImageMatGray, targetImageMatBlur, new Size(7, 7), 0);
+		opencv_imgproc.GaussianBlur(targetImageMatGray, targetImageMatBlur,
+				new Size(Configurations.USE_GAUSSIAN_BLUR_SIZE, Configurations.USE_GAUSSIAN_BLUR_SIZE), 0);
 
 		// エッジ抽出
 		Mat targetImageMatEdge = new Mat();
-		opencv_imgproc.Canny(targetImageMatBlur, targetImageMatEdge, 50, 100);
+		opencv_imgproc.Canny(targetImageMatBlur, targetImageMatEdge, Configurations.USE_CANNY_THRESHOLD_1,
+				Configurations.USE_CANNY_THRESHOLD_2);
 		opencv_imgproc.dilate(targetImageMatEdge, targetImageMatEdge, new Mat());
 		opencv_imgproc.erode(targetImageMatEdge, targetImageMatEdge, new Mat());
 
@@ -68,6 +76,9 @@ public abstract class AbstractObjectSize {
 						.filter(contour -> useContourAreaThreshold < opencv_imgproc.contourArea(contour))
 						.collect(Collectors.toList()).toArray(new Mat[0]));
 		System.out.println("使用する輪郭数:" + useTargetImageContours.size());
+
+		// debug
+		 opencv_core.copyTo(targetImageMatEdge, targetImageMat, new Mat());
 
 		// 全ての輪郭を描画
 		if (Configurations.DRAW_ALL_CONTOURS) {
@@ -146,19 +157,21 @@ public abstract class AbstractObjectSize {
 					new Point((trbr.x() + 10), trbr.y()),
 					opencv_imgproc.FONT_HERSHEY_SIMPLEX, 0.5, Scalar.BLACK);
 
-			try {
-				// MatVectorを作成
-				MatVector pointsMatVector = new MatVector(points);
+			if (USE_ALTERNATIVE_DRAWING) {
+				try {
+					// MatVectorを作成
+					MatVector pointsMatVector = new MatVector(points);
 
-				// 輪郭を描画
-				// TODO 動かない
-				opencv_imgproc.drawContours(targetImageMat, pointsMatVector, -1, Scalar.RED);
-			} catch (Exception e) {
-				e.printStackTrace();
+					// 輪郭を描画
+					// TODO 動かない
+					opencv_imgproc.drawContours(targetImageMat, pointsMatVector, -1, Scalar.RED);
+				} catch (Exception e) {
+					e.printStackTrace();
 
-				// 輪郭を描画
-				if (Configurations.DRAW_ALL_CONTOURS) {
-					opencv_imgproc.drawContours(targetImageMat, new MatVector(contour), -1, Scalar.YELLOW);
+					// 輪郭を描画
+					if (Configurations.DRAW_ALL_CONTOURS) {
+						opencv_imgproc.drawContours(targetImageMat, new MatVector(contour), -1, Scalar.YELLOW);
+					}
 				}
 			}
 		}
