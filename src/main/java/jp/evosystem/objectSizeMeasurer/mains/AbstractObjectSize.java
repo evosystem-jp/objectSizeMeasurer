@@ -59,16 +59,23 @@ public abstract class AbstractObjectSize {
 				new Size(Configurations.USE_GAUSSIAN_BLUR_SIZE, Configurations.USE_GAUSSIAN_BLUR_SIZE), 0);
 
 		// エッジ抽出
-		Mat targetImageMatEdge = new Mat();
-		opencv_imgproc.Canny(targetImageMatBlur, targetImageMatEdge, Configurations.USE_CANNY_THRESHOLD_1,
+		Mat targetImageMatCanny = new Mat();
+		opencv_imgproc.Canny(targetImageMatBlur, targetImageMatCanny, Configurations.USE_CANNY_THRESHOLD_1,
 				Configurations.USE_CANNY_THRESHOLD_2);
-		opencv_imgproc.dilate(targetImageMatEdge, targetImageMatEdge, new Mat());
-		opencv_imgproc.erode(targetImageMatEdge, targetImageMatEdge, new Mat());
+		Mat targetImageMatDilate = new Mat();
+		opencv_imgproc.dilate(targetImageMatCanny, targetImageMatDilate, new Mat());
+		Mat targetImageMatErode = new Mat();
+		opencv_imgproc.erode(targetImageMatDilate, targetImageMatErode, new Mat());
+
+		// debug
+		if (Configurations.ENABLE_DEBUG_MODE) {
+			opencv_core.copyTo(targetImageMatErode, targetImageMat, new Mat());
+		}
 
 		// 輪郭を検出
 		MatVector targetImageContours = new MatVector();
 		Mat targetImageHierarchy = new Mat();
-		opencv_imgproc.findContours(targetImageMatEdge, targetImageContours, targetImageHierarchy,
+		opencv_imgproc.findContours(targetImageMatErode, targetImageContours, targetImageHierarchy,
 				opencv_imgproc.RETR_EXTERNAL,
 				opencv_imgproc.CHAIN_APPROX_SIMPLE);
 		System.out.println("検出した輪郭数:" + targetImageContours.size());
@@ -82,11 +89,6 @@ public abstract class AbstractObjectSize {
 						})
 						.collect(Collectors.toList()).toArray(new Mat[0]))) {
 			System.out.println("使用する輪郭数:" + useTargetImageContours.size());
-
-			// debug
-			if (Configurations.ENABLE_DEBUG_MODE) {
-				opencv_core.copyTo(targetImageMatEdge, targetImageMat, new Mat());
-			}
 
 			// 全ての輪郭を描画
 			if (Configurations.DRAW_ALL_CONTOURS) {
