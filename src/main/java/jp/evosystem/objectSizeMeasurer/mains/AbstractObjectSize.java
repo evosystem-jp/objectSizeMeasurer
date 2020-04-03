@@ -62,20 +62,18 @@ public abstract class AbstractObjectSize {
 		Mat targetImageMatCanny = new Mat();
 		opencv_imgproc.Canny(targetImageMatBlur, targetImageMatCanny, Configurations.USE_CANNY_THRESHOLD_1,
 				Configurations.USE_CANNY_THRESHOLD_2);
-		Mat targetImageMatDilate = new Mat();
-		opencv_imgproc.dilate(targetImageMatCanny, targetImageMatDilate, new Mat());
-		Mat targetImageMatErode = new Mat();
-		opencv_imgproc.erode(targetImageMatDilate, targetImageMatErode, new Mat());
+		Mat targetImageMatClose = new Mat();
+		opencv_imgproc.morphologyEx(targetImageMatCanny, targetImageMatClose, opencv_imgproc.MORPH_CLOSE, new Mat());
 
 		// debug
 		if (Configurations.ENABLE_DEBUG_MODE) {
-			opencv_core.copyTo(targetImageMatErode, targetImageMat, new Mat());
+			opencv_core.copyTo(targetImageMatClose, targetImageMat, new Mat());
 		}
 
 		// 輪郭を検出
 		MatVector targetImageContours = new MatVector();
 		Mat targetImageHierarchy = new Mat();
-		opencv_imgproc.findContours(targetImageMatErode, targetImageContours, targetImageHierarchy,
+		opencv_imgproc.findContours(targetImageMatClose, targetImageContours, targetImageHierarchy,
 				opencv_imgproc.RETR_EXTERNAL,
 				opencv_imgproc.CHAIN_APPROX_SIMPLE);
 		System.out.println("検出した輪郭数:" + targetImageContours.size());

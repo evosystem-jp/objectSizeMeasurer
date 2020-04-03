@@ -56,7 +56,7 @@ mvn exec:java -Dexec.mainClass="jp.evosystem.objectSizeMeasurer.mains.WebCameraO
 
 ## Authors
 
-* **Evosystem, inc.**
+* **Evosystem, Inc.**
 
 ## Acknowledgments
 
