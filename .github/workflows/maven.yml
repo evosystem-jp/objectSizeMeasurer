@@ -12,6 +12,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 8
@@ -22,3 +25,14 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Add label
+      uses: actions/github-script@v6
+      if: ${{ github.event_name == 'pull_request' }}
+      with:
+        script: |
+          github.rest.issues.addLabels({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            labels: ["automerge"]
+          })
