@@ -16,7 +16,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
@@ -27,7 +27,7 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Add label
       uses: actions/github-script@v6
-      if: ${{ github.event_name == 'pull_request' }}
+      if: ${{ github.event_name == 'pull_request' && github.actor == 'dependabot[bot]' }}
       with:
         script: |
           github.rest.issues.addLabels({
